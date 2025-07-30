@@ -18,8 +18,8 @@
         "verbatimModuleSyntax": false,
         "types": ["bun-types"],
         "noFallthroughCasesInSwitch": true,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "noPropertyAccessFromIndexSignature": false,
         "sourceMap": true,
         "outDir": "dist"
