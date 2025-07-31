@@ -15,7 +15,8 @@
         "lint": "biome check .",
         "lint:fix": "biome check --write",
         "test": "bun test",
-        "test:coverage": "bun test --coverage"
+        "test:coverage": "bun test --coverage",
+        "release": "release-it"
     },
     "dependencies": {},
     "devDependencies": {
@@ -24,7 +25,9 @@
         "@commitlint/config-conventional": "^19.8.1",
         "@types/bun": "^1.2.18",
         "lefthook": "^1.12.2",
-        "typescript": "5.8.3"
+        "typescript": "5.8.3",
+        "release-it": "^17.6.0",
+        "@release-it/conventional-changelog": "^8.0.1"
     },
     "peerDependencies": {
         "typescript": "^5",
