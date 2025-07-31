@@ -1,10 +1,10 @@
 # tagged-keyv-wrapper
 
-A powerful extension of [Keyv](https://github.com/jaredwray/keyv) that adds tag-based cache invalidation and management capabilities.
+A powerful extension of [@keyvhq/core](https://github.com/jaredwray/keyv) that adds tag-based cache invalidation and management capabilities to the Keyv ecosystem.
 
 ## Features
 
-- **🔄 Drop-in replacement** for Keyv with full backward compatibility
+- **🔄 Drop-in replacement** for `@keyvhq/core` with full backward compatibility
 - **🏷️ Tag-based invalidation** - Organize cache entries with tags and invalidate them in bulk
 - **⚡ Memory efficient** - Automatic compaction and dead key removal
 - **🔒 Concurrency safe** - Built-in locking prevents race conditions
@@ -14,8 +14,9 @@ A powerful extension of [Keyv](https://github.com/jaredwray/keyv) that adds tag-
 ## Installation
 
 ```bash
-bun add @keyvhq/core
-# This package is currently local to the monorepo
+npm install tagged-keyv-wrapper @keyvhq/core
+# or
+bun add tagged-keyv-wrapper @keyvhq/core
 ```
 
 ## Quick Start
@@ -24,13 +25,13 @@ bun add @keyvhq/core
 import Keyv from '@keyvhq/core';
 import { TaggedKeyv } from 'tagged-keyv-wrapper';
 
-// Create a Keyv instance (any storage adapter works)
+// Create a @keyvhq/core instance (any storage adapter works)
 const keyv = new Keyv();
 
 // Create TaggedKeyv instance
 const cache = new TaggedKeyv(keyv);
 
-// Use it exactly like Keyv
+// Use it exactly like @keyvhq/core
 await cache.set('user:123', { name: 'John' });
 const user = await cache.get('user:123');
 
@@ -152,7 +153,7 @@ TaggedKeyv uses a pluggable architecture with separate concerns:
 
 - **TaggedKeyv** - Main orchestrator class
 - **TagManager** - Interface for tag metadata storage
-- **KeyvTagManager** - Default implementation using Keyv for tag storage
+- **KeyvTagManager** - Default implementation using `@keyvhq/core` for tag storage
 
 ### Custom TagManager
 
@@ -197,7 +198,7 @@ bun run dev            # Watch mode
 
 ## Migration from Keyv
 
-TaggedKeyv is a complete drop-in replacement for Keyv:
+TaggedKeyv is a complete drop-in replacement for `@keyvhq/core`:
 
 ```typescript
 // Before
@@ -214,4 +215,8 @@ await cache.set('key', 'value', { ttl: 3600, tags: ['tag1'] });
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
