@@ -213,6 +213,13 @@ await cache.set('key', 'value', 3600);
 await cache.set('key', 'value', { ttl: 3600, tags: ['tag1'] });
 ```
 
+## Community & Support
+
+We're happy to help with any questions or issues you might have. Here are some ways to get support:
+
+*   **GitHub Issues**: For bug reports and feature requests, please use our [GitHub Issues](https://github.com/angelxmoreno/tagged-keyv-wrapper/issues).
+*   **Discord**: Join our community on Discord for general discussion and support: [https://discord.gg/RNDzuJcHTu](https://discord.gg/RNDzuJcHTu)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
