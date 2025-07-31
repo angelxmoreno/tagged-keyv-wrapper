@@ -1,0 +1,52 @@
+---
+layout: layout.liquid
+---
+<section class="text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">
+                {{ site.brandName }}
+            </h1>
+            <p class="lead text-body-secondary">
+                {{ site.description }}
+            </p>
+            <a href="/documentation" class="btn btn-primary btn-lg">
+                Documentation
+            </a>
+        </div>
+    </div>
+</section>
+<hr/>
+<section>
+    <div class="row">
+        <div class="col-lg-8 col-md-12 mx-auto">
+            {% for introSection in site.homePageProps.introSections %}
+                <div class="row py-lg-3">
+                    <h2>{{ introSection.title }}</h2>
+                    <p>
+                        {{ introSection.content }}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<hr/>
+<div class="container">
+    <h2 class="py-2">Core Features</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for feature in site.homePageProps.features %}
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> {{ feature.title }}</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           {{ feature.content }}
+                       </p>
+                   </div>
+               </div>
+           </div>
+        {% endfor %}
+    </div>
+</div>
+{{ content }}

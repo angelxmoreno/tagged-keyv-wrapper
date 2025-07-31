@@ -1,8 +1,7 @@
 ---
-layout: layout.njk
+layout: two-column.liquid
 title: API Reference
-description: API Reference for tagged-keyv-wrapper
-canonical: https://tagged-keyv-wrapper.axmdev.app/api
+permalink: /documentation/api-reference/
 ---
 
 # API Reference
