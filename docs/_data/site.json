@@ -18,32 +18,26 @@
         ],
         "features": [
             {
-                "iconClass": "fa-brands fa-github",
                 "title": "Drop-in replacement",
                 "content": "for `@keyvhq/core` with full backward compatibility"
             },
             {
-                "iconClass": "fa-brands fa-github",
                 "title": "Tag-based invalidation",
                 "content": "Organize cache entries with tags and invalidate them in bulk"
             },
             {
-                "iconClass": "fa-brands fa-github",
                 "title": "Memory efficient",
                 "content": "Automatic compaction and dead key removal"
             },
             {
-                "iconClass": "fa-brands fa-github",
                 "title": "Concurrency safe",
                 "content": "Built-in locking prevents race conditions"
             },
             {
-                "iconClass": "fa-brands fa-github",
                 "title": "Extensible architecture",
                 "content": "Pluggable TagManager interface for different storage backends"
             },
             {
-                "iconClass": "fa-brands fa-github",
                 "title": "Full TypeScript support",
                 "content": "Complete type safety with generics"
             }
