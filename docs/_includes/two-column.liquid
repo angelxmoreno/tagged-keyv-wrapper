@@ -1,0 +1,26 @@
+---
+layout: layout.liquid
+---
+<main class="container-fluid">
+    <div class="row">
+        <section id="sideBarNav" class="col-md-2 border-end p-3">
+            <ul class="nav flex-column">
+                {% for pageSection in sideBar %}
+                    <li class="nav-item mb-1">
+                        <a class="nav-link fw-bold ps-0 pb-0" href="{{ pageSection.link }}">{{ pageSection.title }}</a>
+                    </li>
+                    {% for subSection in pageSection.sections %}
+                        <li class="nav-item">
+                            <a class="nav-link ps-4 pb-1" href="{{ pageSection.link }}#{{ subSection.anchor }}">{{ subSection.title }}</a>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </section>
+        <section id="sideBarMain" class="col-md-10">
+            <article>
+                {{ content }}
+            </article>
+        </section>
+    </div>
+</main>

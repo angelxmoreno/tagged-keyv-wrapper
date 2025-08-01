@@ -1,0 +1,66 @@
+{
+    "brandName": "Tagged Keyv Wrapper",
+    "description": "A powerful extension of Keyv that adds tag-based cache invalidation and management capabilities.",
+    "homePageProps": {
+        "introSections": [
+            {
+                "title": "Why I built Tagged Keyv Wrapper",
+                "content": "@keyvhq/core is a great key-value storage library, but it lacks a native way to invalidate multiple keys based on a shared topic or category. This wrapper was built to add robust tagging support for smarter, scoped cache management."
+            },
+            {
+                "title": "What Tagged Keyv Wrapper does",
+                "content": "It wraps a `@keyvhq/core` instance, allowing you to associate one or more tags with each cache entry. This enables you to perform bulk operations, such as invalidating or retrieving all entries associated with a specific tag, without affecting the rest of the cache."
+            },
+            {
+                "title": "Who benefits from Tagged Keyv Wrapper",
+                "content": "Developers using the Keyv ecosystem for caching in applications that need smart, targeted invalidation, such as GraphQL APIs, content management systems, or multi-tenant platforms."
+            }
+        ],
+        "features": [
+            {
+                "title": "Drop-in replacement",
+                "content": "for `@keyvhq/core` with full backward compatibility"
+            },
+            {
+                "title": "Tag-based invalidation",
+                "content": "Organize cache entries with tags and invalidate them in bulk"
+            },
+            {
+                "title": "Memory efficient",
+                "content": "Automatic compaction and dead key removal"
+            },
+            {
+                "title": "Concurrency safe",
+                "content": "Built-in locking prevents race conditions"
+            },
+            {
+                "title": "Extensible architecture",
+                "content": "Pluggable TagManager interface for different storage backends"
+            },
+            {
+                "title": "Full TypeScript support",
+                "content": "Complete type safety with generics"
+            }
+        ]
+    },
+    "socialLinks": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/angelxmoreno/tagged-keyv-wrapper",
+            "iconClass": "fa-brands fa-github"
+        },
+        {
+            "name": "Discord",
+            "url": "https://discord.gg/RNDzuJcHTu",
+            "iconClass": "fa-brands fa-discord"
+        },
+        {
+            "name": "NPM",
+            "url": "https://www.npmjs.com/package/tagged-keyv-wrapper",
+            "iconClass": "fa-brands fa-npm"
+        }
+    ],
+    "npmModule": false,
+    "discordChannel": false,
+    "githubRepoUrl": "https://github.com/angelxmoreno/tagged-keyv-wrapper"
+}

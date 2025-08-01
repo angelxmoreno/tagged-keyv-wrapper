@@ -3,6 +3,23 @@
     "version": "1.0.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "description": "A powerful extension of Keyv that adds tag-based cache invalidation and management capabilities.",
+    "keywords": [
+        "keyv",
+        "cache",
+        "tagging",
+        "invalidation"
+    ],
+    "author": "Angel S. Moreno <angelxmoreno@gmail.com> (https://angelxmoreno.github.io/)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/angelxmoreno/tagged-keyv-wrapper.git"
+    },
+    "homepage": "https://tagged-keyv-wrapper.axmdev.app",
+    "bugs": {
+        "url": "https://github.com/angelxmoreno/tagged-keyv-wrapper/issues"
+    },
     "files": [
         "dist",
         "README.md",
@@ -32,22 +49,5 @@
     "peerDependencies": {
         "typescript": "^5",
         "@keyvhq/core": "^2.1.7"
-    },
-    "description": "A powerful extension of Keyv that adds tag-based cache invalidation and management capabilities.",
-    "keywords": [
-        "keyv",
-        "cache",
-        "tagging",
-        "invalidation"
-    ],
-    "author": "Angel S. Moreno <angelxmoreno@gmail.com> (https://angelxmoreno.github.io/)",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/angelxmoreno/tagged-keyv-wrapper.git"
-    },
-    "homepage": "https://github.com/angelxmoreno/tagged-keyv-wrapper#readme",
-    "bugs": {
-        "url": "https://github.com/angelxmoreno/tagged-keyv-wrapper/issues"
     }
 }

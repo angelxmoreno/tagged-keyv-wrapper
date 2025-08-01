@@ -1,0 +1,57 @@
+[
+    {
+        "title": "Getting Started",
+        "link": "/documentation",
+        "sections": [
+            {
+                "title": "Prerequisites",
+                "anchor": "prerequisites"
+            },
+            {
+                "title": "Installation",
+                "anchor": "installation"
+            },
+            {
+                "title": "Quick Start Example",
+                "anchor": "quick-start-example"
+            }
+        ]
+    },
+    {
+        "title": "Usage & Examples",
+        "link": "/documentation/usage-examples/",
+        "sections": [
+            {
+                "title": "User Session Management",
+                "anchor": "user-session-management"
+            },
+            {
+                "title": "Product Catalog Caching",
+                "anchor": "product-catalog-caching"
+            }
+        ]
+    },
+    {
+        "title": "API Reference",
+        "link": "/documentation/api-reference/",
+        "sections": [
+            {
+                "title": "Primary Class: TaggedKeyv",
+                "anchor": "primary-class-taggedkeyv"
+            },
+            {
+                "title": "Constructor",
+                "anchor": "constructor"
+            },
+            {
+                "title": "Methods",
+                "anchor": "methods"
+            }
+        ]
+    },
+    {
+        "title": "Community & Support",
+        "link": "/documentation/community-support/",
+        "sections": []
+    }
+]
