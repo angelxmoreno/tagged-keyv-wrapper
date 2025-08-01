@@ -1,0 +1,213 @@
+<!doctype html>
+<!--suppress JSUnresolvedLibraryURL -->
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>tagged-keyv-wrapper | axmdev</title>
+    <meta name="description" content="A powerful extension for @keyvhq/core that adds tag-based cache invalidation, bulk management, and concurrency-safe operations to the Keyv ecosystem.">
+    <link rel="canonical" href="https://tagged-keyv-wrapper.axmdev.app/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+          integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="/static/main.css"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Tagged Keyv Wrapper</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <span class="navbar-text">
+                (A working progress...)
+            </span>
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/documentation">Getting Started</a></li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <div class="social-icons">
+                
+                    
+                        <a
+                                href="https://github.com/angelxmoreno/tagged-keyv-wrapper"
+                                target="_blank" rel="noopener noreferrer"
+                                title="GitHub"
+                                class="btn btn-sm btn-secondary-outline"
+                        >
+                            
+                                <i class="fa-brands fa-github" style="font-size: 1.5rem; "></i>
+                            
+                        </a>
+                    
+                
+                    
+                        <a
+                                href="https://discord.gg/RNDzuJcHTu"
+                                target="_blank" rel="noopener noreferrer"
+                                title="Discord"
+                                class="btn btn-sm btn-secondary-outline"
+                        >
+                            
+                                <i class="fa-brands fa-discord" style="font-size: 1.5rem; "></i>
+                            
+                        </a>
+                    
+                
+                    
+                        <a
+                                href="https://www.npmjs.com/package/tagged-keyv-wrapper"
+                                target="_blank" rel="noopener noreferrer"
+                                title="NPM"
+                                class="btn btn-sm btn-secondary-outline"
+                        >
+                            
+                                <i class="fa-brands fa-npm" style="font-size: 1.5rem; "></i>
+                            
+                        </a>
+                    
+                
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <section class="text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">
+                Tagged Keyv Wrapper
+            </h1>
+            <p class="lead text-body-secondary">
+                A powerful extension of Keyv that adds tag-based cache invalidation and management capabilities.
+            </p>
+            <a href="/documentation" class="btn btn-primary btn-lg">
+                Documentation
+            </a>
+        </div>
+    </div>
+</section>
+<hr/>
+<section>
+    <div class="row">
+        <div class="col-lg-8 col-md-12 mx-auto">
+            
+                <div class="row py-lg-3">
+                    <h2>Why I built Tagged Keyv Wrapper</h2>
+                    <p>
+                        @keyvhq/core is a great key-value storage library, but it lacks a native way to invalidate multiple keys based on a shared topic or category. This wrapper was built to add robust tagging support for smarter, scoped cache management.
+                    </p>
+                </div>
+            
+                <div class="row py-lg-3">
+                    <h2>What Tagged Keyv Wrapper does</h2>
+                    <p>
+                        It wraps a `@keyvhq/core` instance, allowing you to associate one or more tags with each cache entry. This enables you to perform bulk operations, such as invalidating or retrieving all entries associated with a specific tag, without affecting the rest of the cache.
+                    </p>
+                </div>
+            
+                <div class="row py-lg-3">
+                    <h2>Who benefits from Tagged Keyv Wrapper</h2>
+                    <p>
+                        Developers using the Keyv ecosystem for caching in applications that need smart, targeted invalidation, such as GraphQL APIs, content management systems, or multi-tenant platforms.
+                    </p>
+                </div>
+            
+        </div>
+    </div>
+</section>
+<hr/>
+<div class="container">
+    <h2 class="py-2">Core Features</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> Drop-in replacement</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           for `@keyvhq/core` with full backward compatibility
+                       </p>
+                   </div>
+               </div>
+           </div>
+        
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> Tag-based invalidation</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           Organize cache entries with tags and invalidate them in bulk
+                       </p>
+                   </div>
+               </div>
+           </div>
+        
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> Memory efficient</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           Automatic compaction and dead key removal
+                       </p>
+                   </div>
+               </div>
+           </div>
+        
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> Concurrency safe</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           Built-in locking prevents race conditions
+                       </p>
+                   </div>
+               </div>
+           </div>
+        
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> Extensible architecture</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           Pluggable TagManager interface for different storage backends
+                       </p>
+                   </div>
+               </div>
+           </div>
+        
+           <div class="col">
+               <div class="card border-light">
+                   <h3 class="h5 card-header"> Full TypeScript support</h3>
+                   <div class="card-body">
+                       <p class="card-text">
+                           Complete type safety with generics
+                       </p>
+                   </div>
+               </div>
+           </div>
+        
+    </div>
+</div>
+
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+</body>
+</html>
