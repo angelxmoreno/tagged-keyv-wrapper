@@ -1,4 +1,4 @@
-import type Keyv from '@keyvhq/core';
+import Keyv from '@keyvhq/core';
 import { KeyvTagManager } from './KeyvTagManager';
 import type { TagManager } from './TagManager';
 
@@ -7,9 +7,9 @@ export class TaggedKeyv {
     private tagManager: TagManager;
     private locks: Map<string, Promise<void>> = new Map();
 
-    constructor(cache: Keyv, tagManager?: TagManager) {
-        this.cache = cache;
-        this.tagManager = tagManager || new KeyvTagManager(cache);
+    constructor(cache?: Keyv, tagManager?: TagManager) {
+        this.cache = cache || new Keyv();
+        this.tagManager = tagManager || new KeyvTagManager(this.cache);
     }
 
     /**
@@ -191,16 +191,27 @@ export class TaggedKeyv {
     /**
      * Retrieves all key-value pairs associated with a tag.
      */
-    async getByTag<T>(tag: string): Promise<Array<[string, T]>> {
+    async getByTag<T>(tag: string, options?: { page?: number; limit?: number }): Promise<Array<[string, T]>> {
         try {
-            const keys = await this.tagManager.getKeysForTag(tag);
-            if (keys.length === 0) return [];
+            const allKeys = await this.tagManager.getKeysForTag(tag);
+            if (allKeys.length === 0) return [];
+
+            const { page = 1, limit = 50 } = options || {};
+
+            // Ensure page is at least 1
+            const currentPage = Math.max(1, page);
+
+            const offset = (currentPage - 1) * limit;
+            const end = offset + limit;
+            const keysToFetch = allKeys.slice(offset, end);
+
+            if (keysToFetch.length === 0) return [];
 
             const results: Array<[string, T]> = [];
             const errors: Error[] = [];
             let deadKeys = 0;
 
-            for (const key of keys) {
+            for (const key of keysToFetch) {
                 try {
                     const val = await this.cache.get(key);
                     if (val !== undefined) {

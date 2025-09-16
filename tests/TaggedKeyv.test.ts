@@ -24,6 +24,19 @@ describe('TaggedKeyv', () => {
             const instance = new TaggedKeyv(keyv, customTagManager);
             expect(instance).toBeInstanceOf(TaggedKeyv);
         });
+
+        it('should create with no parameters and function correctly', async () => {
+            const instance = new TaggedKeyv();
+            expect(instance).toBeInstanceOf(TaggedKeyv);
+
+            // Verify it works with the default in-memory store
+            await instance.set('foo', 'bar', { tags: ['test'] });
+            const value = await instance.get('foo');
+            expect(value).toBe('bar');
+
+            const results = await instance.getByTag('test');
+            expect(results).toEqual([['foo', 'bar']]);
+        });
     });
 
     describe('set - legacy API', () => {
@@ -190,6 +203,49 @@ describe('TaggedKeyv', () => {
 
             const results = await taggedKeyv.getByTag('users');
             expect(results).toEqual([['user:456', { name: 'Jane' }]]);
+        });
+
+        describe('with page/limit pagination', () => {
+            beforeEach(async () => {
+                // Create 55 users for pagination tests to test defaults
+                for (let i = 1; i <= 55; i++) {
+                    await taggedKeyv.set(`user:${i}`, { name: `User ${i}` }, undefined, ['users']);
+                }
+            });
+
+            it('should use default limit of 50 when no options are provided', async () => {
+                const results = await taggedKeyv.getByTag('users');
+                expect(results).toHaveLength(50);
+            });
+
+            it('should respect the limit option', async () => {
+                const results = await taggedKeyv.getByTag('users', { limit: 10 });
+                expect(results).toHaveLength(10);
+            });
+
+            it('should respect the page option', async () => {
+                // Get page 2 with a limit of 10
+                const results = await taggedKeyv.getByTag('users', { page: 2, limit: 10 });
+                expect(results).toHaveLength(10);
+                expect(results[0]?.[0]).toBe('user:11'); // 1-based index
+            });
+
+            it('should handle reaching the last page', async () => {
+                // 55 users, limit 50. Page 2 should have 5 users.
+                const results = await taggedKeyv.getByTag('users', { page: 2 });
+                expect(results).toHaveLength(5);
+            });
+
+            it('should handle page number greater than available pages', async () => {
+                const results = await taggedKeyv.getByTag('users', { page: 10 });
+                expect(results).toHaveLength(0);
+            });
+
+            it('should handle a page number less than 1', async () => {
+                const resultsPage0 = await taggedKeyv.getByTag('users', { page: 0, limit: 5 });
+                const resultsPage1 = await taggedKeyv.getByTag('users', { page: 1, limit: 5 });
+                expect(resultsPage0).toEqual(resultsPage1);
+            });
         });
     });
 
