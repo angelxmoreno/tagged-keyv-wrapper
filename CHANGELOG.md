@@ -1,5 +1,12 @@
 
 
+# [1.2.0](https://github.com/angelxmoreno/tagged-keyv-wrapper/compare/v1.1.0...v1.2.0) (2025-09-16)
+
+
+### Features
+
+* **constructor:** allow empty constructor for in-memory default ([75e71cd](https://github.com/angelxmoreno/tagged-keyv-wrapper/commit/75e71cd85ce1e0d7845f41f70cd065dc1b00aed9)), closes [#4](https://github.com/angelxmoreno/tagged-keyv-wrapper/issues/4)
+
 # 1.1.0 (2025-08-01)
 
 
