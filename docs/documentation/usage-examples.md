@@ -13,9 +13,11 @@ permalink: /documentation/usage-examples/
 ```typescript
 import { TaggedKeyv } from 'tagged-keyv-wrapper';
 import Keyv from '@keyvhq/core';
+import KeyvRedis from '@keyvhq/redis'; // Import the Redis adapter
 
 // Using a custom Keyv instance (e.g., Redis, Memcached)
-const redisKeyv = new Keyv('redis://user:pass@localhost:6379');
+const redisStore = new KeyvRedis('redis://user:pass@localhost:6379');
+const redisKeyv = new Keyv({ store: redisStore });
 const cacheWithRedis = new TaggedKeyv(redisKeyv);
 
 // Using the default in-memory Keyv store
