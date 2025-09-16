@@ -172,4 +172,21 @@ export class KeyvTagManager implements TagManager {
             }
         }
     }
+
+    async getAllTags(): Promise<string[]> {
+        const tags = new Set<string>();
+        // Keyv's iterator method is used to iterate over all keys.
+        // This assumes the underlying Keyv store supports iteration.
+        // If not, a more specific implementation for the Keyv store would be needed.
+        const iterator = this.cache.iterator();
+        let entry = await iterator.next();
+        while (!entry.done) {
+            const [key] = entry.value;
+            if (key.startsWith(TAG_PREFIX)) {
+                tags.add(key.substring(TAG_PREFIX.length));
+            }
+            entry = await iterator.next();
+        }
+        return Array.from(tags);
+    }
 }

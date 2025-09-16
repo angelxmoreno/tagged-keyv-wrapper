@@ -236,6 +236,31 @@ describe('KeyvTagManager', () => {
         });
     });
 
+    describe('getAllTags', () => {
+        it('should return all unique tags', async () => {
+            await tagManager.setTagsForKey('user:123', ['users', 'active']);
+            await tagManager.setTagsForKey('product:abc', ['products', 'featured']);
+            await tagManager.setTagsForKey('order:xyz', ['orders']);
+
+            const allTags = await tagManager.getAllTags();
+            TestUtils.expectArraysEqualUnordered(allTags, ['users', 'active', 'products', 'featured', 'orders']);
+        });
+
+        it('should return an empty array if no tags exist', async () => {
+            const allTags = await tagManager.getAllTags();
+            expect(allTags).toEqual([]);
+        });
+
+        it('should return unique tags even with duplicates in storage', async () => {
+            await tagManager.addKeyToTag('key1', 'tagA');
+            await tagManager.addKeyToTag('key2', 'tagA');
+            await tagManager.addKeyToTag('key3', 'tagB');
+
+            const allTags = await tagManager.getAllTags();
+            TestUtils.expectArraysEqualUnordered(allTags, ['tagA', 'tagB']);
+        });
+    });
+
     describe('edge cases', () => {
         it('should handle malformed data gracefully', async () => {
             // Set invalid data directly

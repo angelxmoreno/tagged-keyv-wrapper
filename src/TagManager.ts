@@ -46,4 +46,9 @@ export interface TagManager {
      * Compact/optimize tag storage (implementation-specific)
      */
     compact(tags?: string[]): Promise<void>;
+
+    /**
+     * Get all unique tags currently stored.
+     */
+    getAllTags(): Promise<string[]>;
 }
