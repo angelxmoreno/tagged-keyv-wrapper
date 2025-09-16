@@ -11,8 +11,9 @@ permalink: /documentation/api-reference/
 ### Constructor
 
 ```typescript
-new TaggedKeyv(keyv: Keyv, tagManager?: TagManager)
+new TaggedKeyv(cache?: Keyv, tagManager?: TagManager)
 ```
+- **Description:** Creates a new `TaggedKeyv` instance. If no `cache` (Keyv instance) is provided, it defaults to an in-memory Keyv store.
 
 ### Methods
 
@@ -38,8 +39,13 @@ new TaggedKeyv(keyv: Keyv, tagManager?: TagManager)
 
 #### `getByTag`
 
--   **Signature:** `getByTag<T>(tag: string): Promise<Array<[string, T]>>`
--   **Description:** Retrieves all key-value pairs for a given tag.
+-   **Signature:** `getByTag<T>(tag: string, options?: { page?: number; limit?: number }): Promise<Array<[string, T]>>`
+-   **Description:** Retrieves key-value pairs associated with a tag. Supports pagination with `page` (1-indexed, defaults to 1) and `limit` (defaults to 50).
+
+#### `getAllTags`
+
+-   **Signature:** `getAllTags(): Promise<string[]>`
+-   **Description:** Retrieves a list of all unique tags currently in use across the cache.
 
 #### `clear`
 

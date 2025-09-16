@@ -29,7 +29,7 @@ import { TaggedKeyv } from 'tagged-keyv-wrapper';
 const keyv = new Keyv();
 
 // Create TaggedKeyv instance
-const cache = new TaggedKeyv(keyv);
+const cache = new TaggedKeyv(keyv); // Or new TaggedKeyv() for in-memory default
 
 // Use it exactly like @keyvhq/core
 await cache.set('user:123', { name: 'John' });
@@ -76,7 +76,10 @@ await cache.clear(): Promise<void>
 
 ```typescript
 // Get all entries with a specific tag
-await cache.getByTag<T>(tag: string): Promise<Array<[string, T]>>
+await cache.getByTag<T>(tag: string, options?: { page?: number; limit?: number }): Promise<Array<[string, T]>>
+
+// Get all unique tags
+await cache.getAllTags(): Promise<string[]>
 
 // Invalidate all entries with a tag
 await cache.invalidateTag(tag: string): Promise<void>

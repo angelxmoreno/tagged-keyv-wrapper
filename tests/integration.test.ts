@@ -135,12 +135,12 @@ describe('Integration Tests', () => {
             }
 
             // Verify all keys are accessible
-            const allKeys = await taggedKeyv.getByTag('all');
+            const allKeys = await taggedKeyv.getByTag('all', { limit: numKeys });
             expect(allKeys).toHaveLength(numKeys);
 
             // Verify even/odd distribution
-            const evenKeys = await taggedKeyv.getByTag('even');
-            const oddKeys = await taggedKeyv.getByTag('odd');
+            const evenKeys = await taggedKeyv.getByTag('even', { limit: numKeys });
+            const oddKeys = await taggedKeyv.getByTag('odd', { limit: numKeys });
             expect(evenKeys.length).toBe(numKeys / 2);
             expect(oddKeys.length).toBe(numKeys / 2);
 

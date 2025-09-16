@@ -4,10 +4,8 @@
     "": {
       "name": "tagged-keyv-docs",
       "dependencies": {
-        "markdown-it-anchor": "^9.2.0",
-      },
-      "devDependencies": {
         "@11ty/eleventy": "^3.0.0",
+        "markdown-it-anchor": "^9.2.0",
       },
     },
   },
