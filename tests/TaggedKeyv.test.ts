@@ -24,6 +24,19 @@ describe('TaggedKeyv', () => {
             const instance = new TaggedKeyv(keyv, customTagManager);
             expect(instance).toBeInstanceOf(TaggedKeyv);
         });
+
+        it('should create with no parameters and function correctly', async () => {
+            const instance = new TaggedKeyv();
+            expect(instance).toBeInstanceOf(TaggedKeyv);
+
+            // Verify it works with the default in-memory store
+            await instance.set('foo', 'bar', { tags: ['test'] });
+            const value = await instance.get('foo');
+            expect(value).toBe('bar');
+
+            const results = await instance.getByTag('test');
+            expect(results).toEqual([['foo', 'bar']]);
+        });
     });
 
     describe('set - legacy API', () => {
