@@ -1,4 +1,4 @@
-import type Keyv from '@keyvhq/core';
+import Keyv from '@keyvhq/core';
 import { KeyvTagManager } from './KeyvTagManager';
 import type { TagManager } from './TagManager';
 
@@ -7,9 +7,9 @@ export class TaggedKeyv {
     private tagManager: TagManager;
     private locks: Map<string, Promise<void>> = new Map();
 
-    constructor(cache: Keyv, tagManager?: TagManager) {
-        this.cache = cache;
-        this.tagManager = tagManager || new KeyvTagManager(cache);
+    constructor(cache?: Keyv, tagManager?: TagManager) {
+        this.cache = cache || new Keyv();
+        this.tagManager = tagManager || new KeyvTagManager(this.cache);
     }
 
     /**
