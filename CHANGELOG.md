@@ -1,5 +1,12 @@
 
 
+## [1.2.1](https://github.com/angelxmoreno/tagged-keyv-wrapper/compare/v1.2.0...v1.2.1) (2025-09-16)
+
+
+### Bug Fixes
+
+* implemented and tested getAllTags method ([a58ba8c](https://github.com/angelxmoreno/tagged-keyv-wrapper/commit/a58ba8cdcd7c8c1c017a809664de5ba27fa321e3))
+
 # [1.2.0](https://github.com/angelxmoreno/tagged-keyv-wrapper/compare/v1.1.0...v1.2.0) (2025-09-16)
 
 
