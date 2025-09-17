@@ -20,7 +20,8 @@ new TaggedKeyv(cache?: Keyv, tagManager?: TagManager)
 #### `set`
 
 -   **Signature:** `set<T>(key: string, value: T, options?: { ttl?: number; tags?: string[] }): Promise<void>`
--   **Description:** Sets a value in the cache with an optional TTL and an array of tags.
+-   **Description:** Sets a value in the cache with an optional TTL (in milliseconds) and an array of tags.
+-   **Note:** TTL values are in milliseconds (e.g., `3600000` = 1 hour).
 
 #### `get`
 

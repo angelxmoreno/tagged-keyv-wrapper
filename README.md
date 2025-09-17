@@ -36,9 +36,9 @@ await cache.set('user:123', { name: 'John' });
 const user = await cache.get('user:123');
 
 // PLUS tag functionality
-await cache.set('user:123', { name: 'John' }, { 
-  ttl: 3600, 
-  tags: ['users', 'active'] 
+await cache.set('user:123', { name: 'John' }, {
+  ttl: 3600000, // 1 hour in milliseconds
+  tags: ['users', 'active']
 });
 
 // Invalidate all users at once
@@ -49,14 +49,16 @@ await cache.invalidateTag('users');
 
 ### Core Methods (Keyv Compatible)
 
+**Note:** TTL values are in **milliseconds** (e.g., `3600000` = 1 hour).
+
 ```typescript
 // Set a value (backward compatible)
 await cache.set(key: string, value: T, ttl?: number): Promise<void>
 
 // Set a value with tags (new API)
-await cache.set(key: string, value: T, options?: { 
-  ttl?: number, 
-  tags?: string[] 
+await cache.set(key: string, value: T, options?: {
+  ttl?: number, // TTL in milliseconds
+  tags?: string[]
 }): Promise<void>
 
 // Get a value
@@ -103,14 +105,14 @@ await cache.compactTags(tags?: string[]): Promise<void>
 
 ```typescript
 // Create sessions with tags
-await cache.set('session:user1:web', { userId: 1, device: 'web' }, { 
-  ttl: 3600, 
-  tags: ['user:1', 'device:web', 'sessions'] 
+await cache.set('session:user1:web', { userId: 1, device: 'web' }, {
+  ttl: 3600000, // 1 hour in milliseconds
+  tags: ['user:1', 'device:web', 'sessions']
 });
 
-await cache.set('session:user1:mobile', { userId: 1, device: 'mobile' }, { 
-  ttl: 3600, 
-  tags: ['user:1', 'device:mobile', 'sessions'] 
+await cache.set('session:user1:mobile', { userId: 1, device: 'mobile' }, {
+  ttl: 3600000, // 1 hour in milliseconds
+  tags: ['user:1', 'device:mobile', 'sessions']
 });
 
 // Invalidate all sessions for user 1
@@ -143,9 +145,9 @@ await cache.invalidateTag('clothing');
 // Warm cache with frequently accessed data
 const users = await database.getActiveUsers();
 for (const user of users) {
-  await cache.set(`user:${user.id}`, user, { 
-    ttl: 1800, 
-    tags: ['users', 'warmed', `role:${user.role}`] 
+  await cache.set(`user:${user.id}`, user, {
+    ttl: 1800000, // 30 minutes in milliseconds
+    tags: ['users', 'warmed', `role:${user.role}`]
   });
 }
 
@@ -158,9 +160,11 @@ await cache.invalidateTag('warmed');
 ```typescript
 // Set up some data
 await cache.set('user:123', { name: 'Alice', role: 'admin' }, {
+  ttl: 1800000, // 30 minutes
   tags: ['users', 'role:admin', 'status:active']
 });
 await cache.set('session:abc', { userId: 123 }, {
+  ttl: 3600000, // 1 hour
   tags: ['sessions', 'device:web']
 });
 
@@ -254,7 +258,7 @@ const cache = new TaggedKeyv(keyv);
 await cache.set('key', 'value', 3600);
 
 // Plus new functionality
-await cache.set('key', 'value', { ttl: 3600, tags: ['tag1'] });
+await cache.set('key', 'value', { ttl: 3600000, tags: ['tag1'] }); // 1 hour
 ```
 
 ## Community & Support
