@@ -336,4 +336,17 @@ export class TaggedKeyv {
             throw new Error(`Failed to get all tags: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
+
+    /**
+     * Retrieves all tags associated with a specific key.
+     */
+    async getTagsForKey(key: string): Promise<string[]> {
+        try {
+            return await this.tagManager.getTagsForKey(key);
+        } catch (error) {
+            throw new Error(
+                `Failed to get tags for key "${key}": ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    }
 }
