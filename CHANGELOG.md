@@ -1,5 +1,13 @@
 
 
+# [1.3.0](https://github.com/angelxmoreno/tagged-keyv-wrapper/compare/v1.2.1...v1.3.0) (2025-09-17)
+
+
+### Features
+
+* exposed getAllTags method in TaggedKeyv class ([9407422](https://github.com/angelxmoreno/tagged-keyv-wrapper/commit/94074221bda0d245e33268f94c1fb15d031efd0f))
+* exposed getTagsForKey method for key introspection ([5418c0f](https://github.com/angelxmoreno/tagged-keyv-wrapper/commit/5418c0f8140c413ecf717fbed854d148ebc25f72))
+
 ## [1.2.1](https://github.com/angelxmoreno/tagged-keyv-wrapper/compare/v1.2.0...v1.2.1) (2025-09-16)
 
 
