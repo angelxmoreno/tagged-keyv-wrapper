@@ -348,6 +348,188 @@ describe('TaggedKeyv', () => {
         });
     });
 
+    describe('getAllTags', () => {
+        it('should return empty array when no tags exist', async () => {
+            const tags = await taggedKeyv.getAllTags();
+            expect(tags).toEqual([]);
+        });
+
+        it('should return all unique tags', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users', 'active']);
+            await taggedKeyv.set('post:456', { title: 'Hello' }, undefined, ['posts', 'published']);
+            await taggedKeyv.set('user:789', { name: 'Jane' }, undefined, ['users', 'inactive']);
+
+            const tags = await taggedKeyv.getAllTags();
+            expect(tags.sort()).toEqual(['active', 'inactive', 'posts', 'published', 'users']);
+        });
+
+        it('should not include duplicate tags', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users']);
+            await taggedKeyv.set('user:456', { name: 'Jane' }, undefined, ['users']);
+            await taggedKeyv.set('user:789', { name: 'Bob' }, undefined, ['users']);
+
+            const tags = await taggedKeyv.getAllTags();
+            expect(tags).toEqual(['users']);
+        });
+
+        it('should return tags after invalidation operations', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users', 'active']);
+            await taggedKeyv.set('post:456', { title: 'Hello' }, undefined, ['posts']);
+
+            await taggedKeyv.invalidateTag('users');
+
+            const tags = await taggedKeyv.getAllTags();
+            expect(tags.sort()).toEqual(['active', 'posts']);
+        });
+
+        it('should handle tags with various characters', async () => {
+            await taggedKeyv.set('item:1', { data: 'test' }, undefined, ['tag-with-dash']);
+            await taggedKeyv.set('item:2', { data: 'test' }, undefined, ['tag_with_underscore']);
+            await taggedKeyv.set('item:3', { data: 'test' }, undefined, ['tag:with:colon']);
+
+            const tags = await taggedKeyv.getAllTags();
+            expect(tags.sort()).toEqual(['tag-with-dash', 'tag:with:colon', 'tag_with_underscore']);
+        });
+
+        it('should return empty array after clear', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users']);
+            await taggedKeyv.set('post:456', { title: 'Hello' }, undefined, ['posts']);
+
+            await taggedKeyv.clear();
+
+            const tags = await taggedKeyv.getAllTags();
+            expect(tags).toEqual([]);
+        });
+
+        it('should handle error from tag manager', async () => {
+            const mockTagManager = {
+                getAllTags: async () => {
+                    throw new Error('Tag manager error');
+                },
+                addKeyToTag: async () => {},
+                removeKeyFromTag: async () => {},
+                getKeysForTag: async () => [],
+                getTagsForKey: async () => [],
+                setTagsForKey: async () => {},
+                deleteTag: async () => {},
+                deleteKeyFromAllTags: async () => {},
+                clear: async () => {},
+                compact: async () => {},
+            };
+
+            const errorTaggedKeyv = new TaggedKeyv(keyv, mockTagManager);
+
+            await expect(errorTaggedKeyv.getAllTags()).rejects.toThrow('Failed to get all tags: Tag manager error');
+        });
+    });
+
+    describe('getTagsForKey', () => {
+        it('should return empty array for key with no tags', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' });
+
+            const tags = await taggedKeyv.getTagsForKey('user:123');
+            expect(tags).toEqual([]);
+        });
+
+        it('should return empty array for non-existent key', async () => {
+            const tags = await taggedKeyv.getTagsForKey('non-existent');
+            expect(tags).toEqual([]);
+        });
+
+        it('should return all tags for a key', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users', 'active', 'role:admin']);
+
+            const tags = await taggedKeyv.getTagsForKey('user:123');
+            expect(tags.sort()).toEqual(['active', 'role:admin', 'users']);
+        });
+
+        it('should return single tag for key with one tag', async () => {
+            await taggedKeyv.set('session:abc', { userId: 1 }, undefined, ['sessions']);
+
+            const tags = await taggedKeyv.getTagsForKey('session:abc');
+            expect(tags).toEqual(['sessions']);
+        });
+
+        it('should handle tags with special characters', async () => {
+            await taggedKeyv.set('item:1', { data: 'test' }, undefined, [
+                'tag-with-dash',
+                'tag_with_underscore',
+                'tag:with:colon',
+            ]);
+
+            const tags = await taggedKeyv.getTagsForKey('item:1');
+            expect(tags.sort()).toEqual(['tag-with-dash', 'tag:with:colon', 'tag_with_underscore']);
+        });
+
+        it('should return updated tags after tag changes', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users', 'active']);
+
+            let tags = await taggedKeyv.getTagsForKey('user:123');
+            expect(tags.sort()).toEqual(['active', 'users']);
+
+            // Update with new tags
+            await taggedKeyv.set('user:123', { name: 'John Updated' }, undefined, ['users', 'inactive', 'role:user']);
+
+            tags = await taggedKeyv.getTagsForKey('user:123');
+            expect(tags.sort()).toEqual(['inactive', 'role:user', 'users']);
+        });
+
+        it('should return empty array after key deletion', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users', 'active']);
+
+            await taggedKeyv.delete('user:123');
+
+            const tags = await taggedKeyv.getTagsForKey('user:123');
+            expect(tags).toEqual([]);
+        });
+
+        it('should return empty array after all key tags are invalidated', async () => {
+            await taggedKeyv.set('user:123', { name: 'John' }, undefined, ['users']);
+
+            await taggedKeyv.invalidateTag('users');
+
+            const tags = await taggedKeyv.getTagsForKey('user:123');
+            expect(tags).toEqual([]);
+        });
+
+        it('should handle new API style set operations', async () => {
+            await taggedKeyv.set(
+                'product:1',
+                { name: 'Widget' },
+                {
+                    ttl: 3600,
+                    tags: ['products', 'category:widgets', 'status:published'],
+                }
+            );
+
+            const tags = await taggedKeyv.getTagsForKey('product:1');
+            expect(tags.sort()).toEqual(['category:widgets', 'products', 'status:published']);
+        });
+
+        it('should handle error from tag manager', async () => {
+            const mockTagManager = {
+                getTagsForKey: async () => {
+                    throw new Error('Tag manager error');
+                },
+                getAllTags: async () => [],
+                addKeyToTag: async () => {},
+                removeKeyFromTag: async () => {},
+                getKeysForTag: async () => [],
+                setTagsForKey: async () => {},
+                deleteTag: async () => {},
+                deleteKeyFromAllTags: async () => {},
+                clear: async () => {},
+                compact: async () => {},
+            };
+
+            const errorTaggedKeyv = new TaggedKeyv(keyv, mockTagManager);
+
+            await expect(errorTaggedKeyv.getTagsForKey('test:key')).rejects.toThrow(
+                'Failed to get tags for key "test:key": Tag manager error'
+            );
+        });
+    });
+
     describe('error handling', () => {
         it('should handle cache errors gracefully', async () => {
             // Mock a cache error

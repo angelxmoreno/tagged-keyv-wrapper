@@ -101,3 +101,61 @@ console.log(secondPageUsers[0]); // Output: ['user:26', { name: 'User 26' }]
 const lastPageUsers = await cache.getByTag('users', { page: 3, limit: 50 });
 console.log(`Last page has ${lastPageUsers.length} users.`); // Output: Last page has 5 users.
 ```
+
+## Tag Introspection and Debugging
+
+Inspect tags for specific keys to enable debugging, conditional operations, and permission checking.
+
+```typescript
+// Set up some data with various tags
+await cache.set('user:123', { name: 'Alice', role: 'admin' }, {
+  tags: ['users', 'role:admin', 'status:active', 'permissions:full']
+});
+await cache.set('session:abc', { userId: 123, device: 'desktop' }, {
+  tags: ['sessions', 'device:desktop', 'type:web']
+});
+
+// Inspect tags for a specific key
+const userTags = await cache.getTagsForKey('user:123');
+console.log('User tags:', userTags);
+// Output: ['users', 'role:admin', 'status:active', 'permissions:full']
+
+// Conditional operations based on tag presence
+if (userTags.includes('role:admin')) {
+  console.log('User has admin privileges');
+  // Perform admin-only operations
+}
+
+// Check session type for routing decisions
+const sessionTags = await cache.getTagsForKey('session:abc');
+const isWebSession = sessionTags.includes('type:web');
+const isMobileSession = sessionTags.includes('type:mobile');
+
+if (isWebSession) {
+  console.log('Serving web-optimized content');
+} else if (isMobileSession) {
+  console.log('Serving mobile-optimized content');
+}
+
+// Debug cache state by examining all tags and their usage
+const allTags = await cache.getAllTags();
+console.log('All active tags:', allTags);
+
+for (const tag of allTags) {
+  const entries = await cache.getByTag(tag, { limit: 1 });
+  console.log(`Tag "${tag}" has entries (showing first):`, entries[0]);
+}
+
+// Audit specific keys for compliance
+const auditKeys = ['user:123', 'session:abc'];
+for (const key of auditKeys) {
+  const tags = await cache.getTagsForKey(key);
+  console.log(`${key} has tags:`, tags);
+
+  // Check for required compliance tags
+  const hasRequiredTags = tags.includes('audited') && tags.includes('compliant');
+  if (!hasRequiredTags) {
+    console.warn(`${key} missing compliance tags`);
+  }
+}
+```

@@ -119,6 +119,187 @@ describe('Integration Tests', () => {
             const remainingUsers = await taggedKeyv.getByTag('users');
             expect(remainingUsers).toHaveLength(0);
         });
+
+        it('should enable tag discovery and administration', async () => {
+            // Simulate a real-world scenario where an admin tool needs to discover
+            // what tags are being used in the cache system
+
+            // Set up a complex cache with various types of data
+            await taggedKeyv.setMany([
+                ['user:1', { name: 'Alice', status: 'active' }, ['users', 'status:active', 'role:admin']],
+                ['user:2', { name: 'Bob', status: 'inactive' }, ['users', 'status:inactive', 'role:user']],
+                ['session:web:123', { userId: 1, browser: 'chrome' }, ['sessions', 'device:web', 'browser:chrome']],
+                ['session:mobile:456', { userId: 2, device: 'ios' }, ['sessions', 'device:mobile', 'platform:ios']],
+                ['cache:report:daily', { data: '...' }, ['reports', 'frequency:daily', 'type:analytics']],
+                ['cache:report:weekly', { data: '...' }, ['reports', 'frequency:weekly', 'type:analytics']],
+                ['product:1', { name: 'Widget' }, ['products', 'category:widgets', 'status:published']],
+            ]);
+
+            // Admin tool wants to discover all active tags
+            const allTags = await taggedKeyv.getAllTags();
+
+            // Should contain all unique tags
+            const expectedTags = [
+                'users',
+                'status:active',
+                'status:inactive',
+                'role:admin',
+                'role:user',
+                'sessions',
+                'device:web',
+                'device:mobile',
+                'browser:chrome',
+                'platform:ios',
+                'reports',
+                'frequency:daily',
+                'frequency:weekly',
+                'type:analytics',
+                'products',
+                'category:widgets',
+                'status:published',
+            ];
+
+            expect(allTags.sort()).toEqual(expectedTags.sort());
+
+            // Admin invalidates all inactive users
+            await taggedKeyv.invalidateTag('status:inactive');
+
+            // Tag discovery should reflect the change
+            const updatedTags = await taggedKeyv.getAllTags();
+            expect(updatedTags).not.toContain('status:inactive');
+            expect(updatedTags).toContain('status:active');
+
+            // Admin can build dynamic interfaces based on tag patterns
+            const statusTags = updatedTags.filter((tag) => tag.startsWith('status:'));
+            const roleTags = updatedTags.filter((tag) => tag.startsWith('role:'));
+            const deviceTags = updatedTags.filter((tag) => tag.startsWith('device:'));
+
+            expect(statusTags.sort()).toEqual(['status:active', 'status:published']);
+            expect(roleTags.sort()).toEqual(['role:admin', 'role:user']);
+            expect(deviceTags.sort()).toEqual(['device:mobile', 'device:web']);
+
+            // Verify that each tag type has at least one tag with data
+            const hasDataForStatusTags = await Promise.all(
+                statusTags.map(async (tag) => {
+                    const data = await taggedKeyv.getByTag(tag);
+                    return data.length > 0;
+                })
+            );
+            expect(hasDataForStatusTags.some((hasData) => hasData)).toBe(true);
+
+            const hasDataForRoleTags = await Promise.all(
+                roleTags.map(async (tag) => {
+                    const data = await taggedKeyv.getByTag(tag);
+                    return data.length > 0;
+                })
+            );
+            expect(hasDataForRoleTags.some((hasData) => hasData)).toBe(true);
+
+            const hasDataForDeviceTags = await Promise.all(
+                deviceTags.map(async (tag) => {
+                    const data = await taggedKeyv.getByTag(tag);
+                    return data.length > 0;
+                })
+            );
+            expect(hasDataForDeviceTags.some((hasData) => hasData)).toBe(true);
+        });
+
+        it('should support introspection and conditional operations with getTagsForKey', async () => {
+            // Simulate a real-world scenario where we need to inspect and make decisions
+            // based on what tags a key currently has
+
+            // Set up various cache entries with different tag patterns
+            await taggedKeyv.setMany([
+                [
+                    'user:1',
+                    { name: 'Alice', role: 'admin' },
+                    ['users', 'role:admin', 'status:active', 'permissions:full'],
+                ],
+                ['user:2', { name: 'Bob', role: 'user' }, ['users', 'role:user', 'status:active']],
+                ['user:3', { name: 'Charlie', role: 'user' }, ['users', 'role:user', 'status:inactive']],
+                ['session:web:1', { userId: 1, device: 'desktop' }, ['sessions', 'device:desktop', 'type:web']],
+                ['session:mobile:2', { userId: 2, device: 'phone' }, ['sessions', 'device:mobile', 'type:app']],
+                ['cache:config:global', { theme: 'dark' }, ['config', 'scope:global', 'type:settings']],
+            ]);
+
+            // Scenario 1: Check user permissions before allowing admin operations
+            const adminUserTags = await taggedKeyv.getTagsForKey('user:1');
+            expect(adminUserTags).toContain('role:admin');
+            expect(adminUserTags).toContain('permissions:full');
+
+            const regularUserTags = await taggedKeyv.getTagsForKey('user:2');
+            expect(regularUserTags).toContain('role:user');
+            expect(regularUserTags).not.toContain('permissions:full');
+
+            // Scenario 2: Conditional cleanup based on status
+            const inactiveUserTags = await taggedKeyv.getTagsForKey('user:3');
+            if (inactiveUserTags.includes('status:inactive')) {
+                // In a real app, we might delete inactive users after some period
+                const userStatus = inactiveUserTags.filter((tag) => tag.startsWith('status:'));
+                expect(userStatus).toEqual(['status:inactive']);
+            }
+
+            // Scenario 3: Session management based on device type
+            const webSessionTags = await taggedKeyv.getTagsForKey('session:web:1');
+            const mobileSessionTags = await taggedKeyv.getTagsForKey('session:mobile:2');
+
+            expect(webSessionTags).toContain('device:desktop');
+            expect(webSessionTags).toContain('type:web');
+            expect(mobileSessionTags).toContain('device:mobile');
+            expect(mobileSessionTags).toContain('type:app');
+
+            // Scenario 4: Configuration management
+            const configTags = await taggedKeyv.getTagsForKey('cache:config:global');
+            expect(configTags).toContain('scope:global');
+            expect(configTags).toContain('type:settings');
+
+            // Scenario 5: Tag-based routing/filtering logic
+            const allKeys = ['user:1', 'user:2', 'user:3', 'session:web:1', 'session:mobile:2', 'cache:config:global'];
+            const keysByType = new Map<string, string[]>();
+
+            for (const key of allKeys) {
+                const tags = await taggedKeyv.getTagsForKey(key);
+                const typeTag = tags.find((tag) => tag.startsWith('type:')) || 'type:unknown';
+
+                if (!keysByType.has(typeTag)) {
+                    keysByType.set(typeTag, []);
+                }
+                keysByType.get(typeTag)?.push(key);
+            }
+
+            expect(keysByType.get('type:web')).toEqual(['session:web:1']);
+            expect(keysByType.get('type:app')).toEqual(['session:mobile:2']);
+            expect(keysByType.get('type:settings')).toEqual(['cache:config:global']);
+            expect(keysByType.get('type:unknown')).toEqual(['user:1', 'user:2', 'user:3']);
+
+            // Scenario 6: Debugging and monitoring
+            const diagnostics = {
+                totalKeys: allKeys.length,
+                taggedKeys: 0,
+                averageTagsPerKey: 0,
+                mostTaggedKey: { key: '', tagCount: 0 },
+            };
+
+            let totalTags = 0;
+            for (const key of allKeys) {
+                const tags = await taggedKeyv.getTagsForKey(key);
+                if (tags.length > 0) {
+                    diagnostics.taggedKeys++;
+                    totalTags += tags.length;
+
+                    if (tags.length > diagnostics.mostTaggedKey.tagCount) {
+                        diagnostics.mostTaggedKey = { key, tagCount: tags.length };
+                    }
+                }
+            }
+
+            diagnostics.averageTagsPerKey = totalTags / diagnostics.taggedKeys;
+
+            expect(diagnostics.taggedKeys).toBe(6); // All keys have tags
+            expect(diagnostics.mostTaggedKey.key).toBe('user:1'); // Has the most tags (4)
+            expect(diagnostics.mostTaggedKey.tagCount).toBe(4);
+            expect(diagnostics.averageTagsPerKey).toBeCloseTo(3.17, 1); // Average tags per key
+        });
     });
 
     describe('Performance and memory efficiency', () => {

@@ -325,4 +325,28 @@ export class TaggedKeyv {
             throw new Error(`Failed to compact tags: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
+
+    /**
+     * Retrieves a list of all unique tags currently in use across the cache.
+     */
+    async getAllTags(): Promise<string[]> {
+        try {
+            return await this.tagManager.getAllTags();
+        } catch (error) {
+            throw new Error(`Failed to get all tags: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
+
+    /**
+     * Retrieves all tags associated with a specific key.
+     */
+    async getTagsForKey(key: string): Promise<string[]> {
+        try {
+            return await this.tagManager.getTagsForKey(key);
+        } catch (error) {
+            throw new Error(
+                `Failed to get tags for key "${key}": ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    }
 }

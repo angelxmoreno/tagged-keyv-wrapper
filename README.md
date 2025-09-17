@@ -81,6 +81,9 @@ await cache.getByTag<T>(tag: string, options?: { page?: number; limit?: number }
 // Get all unique tags
 await cache.getAllTags(): Promise<string[]>
 
+// Get all tags for a specific key
+await cache.getTagsForKey(key: string): Promise<string[]>
+
 // Invalidate all entries with a tag
 await cache.invalidateTag(tag: string): Promise<void>
 
@@ -148,6 +151,44 @@ for (const user of users) {
 
 // Clear warmed cache
 await cache.invalidateTag('warmed');
+```
+
+### Tag Introspection and Debugging
+
+```typescript
+// Set up some data
+await cache.set('user:123', { name: 'Alice', role: 'admin' }, {
+  tags: ['users', 'role:admin', 'status:active']
+});
+await cache.set('session:abc', { userId: 123 }, {
+  tags: ['sessions', 'device:web']
+});
+
+// Discover all tags in the system
+const allTags = await cache.getAllTags();
+console.log('All tags:', allTags);
+// ['users', 'role:admin', 'status:active', 'sessions', 'device:web']
+
+// Inspect tags for a specific key
+const userTags = await cache.getTagsForKey('user:123');
+console.log('User tags:', userTags);
+// ['users', 'role:admin', 'status:active']
+
+// Conditional operations based on tags
+if (userTags.includes('role:admin')) {
+  console.log('User has admin privileges');
+}
+
+// Debug cache state
+for (const tag of allTags) {
+  const entries = await cache.getByTag(tag);
+  console.log(`Tag "${tag}" has ${entries.length} entries`);
+}
+
+// Check if a key has specific tags
+const sessionTags = await cache.getTagsForKey('session:abc');
+const isWebSession = sessionTags.includes('device:web');
+const isMobileSession = sessionTags.includes('device:mobile');
 ```
 
 ## Architecture
