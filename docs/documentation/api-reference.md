@@ -47,6 +47,11 @@ new TaggedKeyv(cache?: Keyv, tagManager?: TagManager)
 -   **Signature:** `getAllTags(): Promise<string[]>`
 -   **Description:** Retrieves a list of all unique tags currently in use across the cache.
 
+#### `getTagsForKey`
+
+-   **Signature:** `getTagsForKey(key: string): Promise<string[]>`
+-   **Description:** Retrieves all tags associated with a specific key. Useful for introspection, debugging, and conditional operations based on tag presence.
+
 #### `clear`
 
 -   **Signature:** `clear(): Promise<void>`
