@@ -74,7 +74,7 @@ describe('TaggedKeyv', () => {
                 'user:123',
                 { name: 'John' },
                 {
-                    ttl: 1000,
+                    ttl: 60000, // 1 minute
                     tags: ['users', 'active'],
                 }
             );
@@ -112,6 +112,88 @@ describe('TaggedKeyv', () => {
         it('should return undefined for non-existent key', async () => {
             const value = await taggedKeyv.get('nonexistent');
             expect(value).toBeUndefined();
+        });
+
+        it('should retrieve full value when set with tags, accessed by key only', async () => {
+            // Set a value with tags
+            const userData = { name: 'Alice', role: 'admin', active: true };
+            await taggedKeyv.set('user:456', userData, {
+                ttl: 300000, // 5 minutes
+                tags: ['users', 'admins', 'active'],
+            });
+
+            // Retrieve by key only - should get complete value
+            const retrievedValue = await taggedKeyv.get('user:456');
+            expect(retrievedValue).toEqual(userData);
+
+            // Verify tags are stored separately but don't affect value retrieval
+            const tags = await taggedKeyv.getTagsForKey('user:456');
+            expect(tags.sort()).toEqual(['active', 'admins', 'users']);
+
+            // Verify value is accessible via tag operations too
+            const usersByTag = await taggedKeyv.getByTag('admins');
+            expect(usersByTag).toEqual([['user:456', userData]]);
+        });
+
+        it('should work identically for tagged and non-tagged entries', async () => {
+            // Set one entry with tags
+            const taggedData = { type: 'tagged', data: 'with tags' };
+            await taggedKeyv.set('tagged:key', taggedData, { tags: ['tagged'] });
+
+            // Set another entry without tags
+            const untaggedData = { type: 'untagged', data: 'no tags' };
+            await taggedKeyv.set('untagged:key', untaggedData);
+
+            // Both should retrieve identically via get()
+            const taggedResult = await taggedKeyv.get('tagged:key');
+            const untaggedResult = await taggedKeyv.get('untagged:key');
+
+            expect(taggedResult).toEqual(taggedData);
+            expect(untaggedResult).toEqual(untaggedData);
+
+            // Verify tag metadata is different but doesn't affect get()
+            const taggedKeyTags = await taggedKeyv.getTagsForKey('tagged:key');
+            const untaggedKeyTags = await taggedKeyv.getTagsForKey('untagged:key');
+
+            expect(taggedKeyTags).toEqual(['tagged']);
+            expect(untaggedKeyTags).toEqual([]);
+        });
+
+        it('should retrieve complex objects with tags unchanged', async () => {
+            const complexObject = {
+                user: {
+                    id: 123,
+                    profile: {
+                        name: 'John Doe',
+                        email: 'john@example.com',
+                        preferences: {
+                            theme: 'dark',
+                            notifications: true,
+                        },
+                    },
+                    roles: ['user', 'premium'],
+                    metadata: {
+                        createdAt: '2023-01-01T00:00:00Z',
+                        lastLogin: '2023-12-01T00:00:00.000Z',
+                        loginCount: 42,
+                    },
+                },
+            };
+
+            // Set complex object with multiple tags
+            await taggedKeyv.set('complex:123', complexObject, {
+                tags: ['users', 'premium', 'active', 'complex-data'],
+            });
+
+            // Retrieve should return exact same object
+            const retrieved = await taggedKeyv.get<typeof complexObject>('complex:123');
+            expect(retrieved).toEqual(complexObject);
+
+            // Deep equality check
+            expect(retrieved?.user.profile.preferences.theme).toBe('dark');
+            expect(retrieved?.user.metadata.loginCount).toBe(42);
+            expect(Array.isArray(retrieved?.user.roles)).toBe(true);
+            expect(retrieved?.user.roles).toEqual(['user', 'premium']);
         });
     });
 
@@ -497,7 +579,7 @@ describe('TaggedKeyv', () => {
                 'product:1',
                 { name: 'Widget' },
                 {
-                    ttl: 3600,
+                    ttl: 1800000, // 30 minutes
                     tags: ['products', 'category:widgets', 'status:published'],
                 }
             );

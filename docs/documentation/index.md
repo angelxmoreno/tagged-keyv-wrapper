@@ -31,7 +31,7 @@ const cache = new TaggedKeyv(keyv);
 
 // Set a value with tags
 await cache.set('user:123', { name: 'John' }, {
-  ttl: 3600,
+  ttl: 3600000, // 1 hour in milliseconds
   tags: ['users', 'active']
 });
 

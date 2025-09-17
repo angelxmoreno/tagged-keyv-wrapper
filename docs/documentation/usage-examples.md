@@ -36,12 +36,12 @@ Manage multiple sessions for a single user and invalidate them all at once upon 
 ```typescript
 // Create sessions with tags
 await cache.set('session:user1:web', { userId: 1, device: 'web' }, {
-  ttl: 3600,
+  ttl: 3600000, // 1 hour in milliseconds
   tags: ['user:1', 'device:web', 'sessions']
 });
 
 await cache.set('session:user1:mobile', { userId: 1, device: 'mobile' }, {
-  ttl: 3600,
+  ttl: 3600000, // 1 hour in milliseconds
   tags: ['user:1', 'device:mobile', 'sessions']
 });
 

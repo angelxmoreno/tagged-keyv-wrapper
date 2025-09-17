@@ -19,7 +19,7 @@ describe('Integration Tests', () => {
                 'session:user1:web',
                 { userId: 1, device: 'web' },
                 {
-                    ttl: 3600,
+                    ttl: 3600000, // 1 hour
                     tags: ['user:1', 'device:web', 'sessions'],
                 }
             );
@@ -28,7 +28,7 @@ describe('Integration Tests', () => {
                 'session:user1:mobile',
                 { userId: 1, device: 'mobile' },
                 {
-                    ttl: 3600,
+                    ttl: 3600000, // 1 hour
                     tags: ['user:1', 'device:mobile', 'sessions'],
                 }
             );
@@ -37,7 +37,7 @@ describe('Integration Tests', () => {
                 'session:user2:web',
                 { userId: 2, device: 'web' },
                 {
-                    ttl: 3600,
+                    ttl: 3600000, // 1 hour
                     tags: ['user:2', 'device:web', 'sessions'],
                 }
             );
@@ -98,7 +98,7 @@ describe('Integration Tests', () => {
             // Warm cache with user data
             for (const user of userData) {
                 await taggedKeyv.set(`user:${user.id}`, user, {
-                    ttl: 1800,
+                    ttl: 1800000, // 30 minutes
                     tags: ['users', `role:${user.role}`, 'warmed'],
                 });
             }
@@ -461,7 +461,7 @@ describe('Integration Tests', () => {
             await taggedKeyv.set('old:key', 'old:value', 1000, ['old']);
 
             // New style
-            await taggedKeyv.set('new:key', 'new:value', { ttl: 1000, tags: ['new'] });
+            await taggedKeyv.set('new:key', 'new:value', { ttl: 60000, tags: ['new'] }); // 1 minute
 
             // Both should work
             const oldValue = await taggedKeyv.get('old:key');
